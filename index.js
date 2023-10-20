@@ -40,7 +40,11 @@ async function run() {
             res.send(result)
         });
 
-
+        app.get('/cart', async (req, res) => {
+            const cursor = cartCollections.find();
+            const result = await cursor.toArray();
+            res.send(result)
+        })
 
         app.post('/brands', async (req, res) => {
             const brands = req.body;
