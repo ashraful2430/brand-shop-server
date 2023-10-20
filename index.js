@@ -30,6 +30,7 @@ async function run() {
         app.get('/brands', async (req, res) => {
             const cursor = brandsCollections.find();
             const result = await cursor.toArray();
+            console.log(cursor);
             res.send(result)
         });
 
