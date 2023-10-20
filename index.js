@@ -30,7 +30,12 @@ async function run() {
         app.get('/brands', async (req, res) => {
             const cursor = brandsCollections.find();
             const result = await cursor.toArray();
-            console.log(cursor);
+            res.send(result)
+        });
+
+        app.get('/cart', async (req, res) => {
+            const cursor = cartCollections.find();
+            const result = await cursor.toArray();
             res.send(result)
         });
 
@@ -41,11 +46,17 @@ async function run() {
             res.send(result)
         });
 
-        app.get('/cart', async (req, res) => {
-            const cursor = cartCollections.find();
-            const result = await cursor.toArray();
-            res.send(result)
+        app.get('/cart/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: id }
+            const result = await cartCollections.findOne(query);
+            res.send(result);
+            console.log(id, query, result);
         })
+
+
+
+
 
         app.post('/brands', async (req, res) => {
             const brands = req.body;
@@ -58,6 +69,13 @@ async function run() {
             const result = await cartCollections.insertOne(cart);
             res.send(result);
 
+        })
+
+        app.delete('/cart/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: id };
+            const result = await cartCollections.deleteOne(query);
+            res.send(result);
         })
 
         app.put('/brands/:id', async (req, res) => {
@@ -75,7 +93,9 @@ async function run() {
             }
             const result = await brandsCollections.updateOne(filter, details, options);
             res.send(result);
-        })
+        });
+
+
 
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
